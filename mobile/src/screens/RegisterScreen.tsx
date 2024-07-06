@@ -1,8 +1,11 @@
 import React, {useState} from "react";
 import { View, Text, TextInput, Button } from "react-native";
-import axios from 'axios'
 import client from '../client/api'
-const RegisterScreen = ({ navigation }) => {
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+type RegisterScreenProps = {
+    navigation:NavigationProp<ParamListBase>
+}
+const RegisterScreen:React.FC<RegisterScreenProps> = ({ navigation }) => {
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
 
