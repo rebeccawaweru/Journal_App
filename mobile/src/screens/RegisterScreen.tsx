@@ -1,11 +1,9 @@
 import React, {useState} from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import client from '../client/api'
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
-type RegisterScreenProps = {
-    navigation:NavigationProp<ParamListBase>
-}
-const RegisterScreen:React.FC<RegisterScreenProps> = ({ navigation }) => {
+import { NavigationProps } from "../types";
+
+const RegisterScreen:React.FC<NavigationProps> = ({ navigation }) => {
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
 
