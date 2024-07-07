@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
 import client from '../client/api'
 import { NavigationProps } from "../types";
-
+import tw from 'twrnc'
 const RegisterScreen:React.FC<NavigationProps> = ({ navigation }) => {
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
@@ -18,12 +18,14 @@ const RegisterScreen:React.FC<NavigationProps> = ({ navigation }) => {
         }
     }
     return (
-        <View>
-            <Text>Register</Text>
-            <TextInput placeholder="Username" value={username} onChangeText={setUsername} />
-            <TextInput placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
-            <Button title="Register" onPress={handleRegister}/>
-            <Button title="Login" onPress={()=>navigation.navigate('Login')}/>
+        <View style={tw`flex-1 justify-center px-8 bg-white`}>
+            <Text style={tw`text-2xl font-bold mb-8 text-center`}>Register</Text>
+            <TextInput style={tw`border border-gray-300 p-2 mb-4 rounded`} placeholder="Username" value={username} onChangeText={setUsername} />
+            <TextInput style={tw`border border-gray-300 p-2 mb-4 rounded`} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
+            <Button title="Submit" onPress={handleRegister}/>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={tw`text-blue-500 mt-4 underline text-center`}>Already have an account?</Text>
+            </TouchableOpacity>
         </View>
     )
 }
