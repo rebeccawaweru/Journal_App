@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, Touchable, TouchableHighlight } from 'react-native';
 import { JournalEntry, NavigationProps } from '../types';
 import client from '../client/api'
 import tw from 'twrnc'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'react-native-gesture-handler';
 const ListJournal:React.FC<NavigationProps> = ({ navigation }) => {
   const [journals, setJournals] = useState([])
   const handleDelete = async(id:any) => {
@@ -36,6 +37,7 @@ const ListJournal:React.FC<NavigationProps> = ({ navigation }) => {
   }, []);
 
   return (
+    <ScrollView style={tw`flex-1`}>
     <View style={tw`p-4`}>
       <Text style={tw`text-xl font-bold mb-4`}>Journal List</Text>
       {journals.map((item:JournalEntry) => (
@@ -44,12 +46,14 @@ const ListJournal:React.FC<NavigationProps> = ({ navigation }) => {
           <Text style={tw`mb-2`}>Category: {item.category}</Text>
           <Text style={tw`mb-2`}>{item.content}</Text>
           <Text style={tw`mb-2`}>{item.date}</Text>
-          <Button title="Edit" onPress={() => navigation.navigate('Edit', { journal:item })} />
-          <Button title="Delete" onPress={()=>handleDelete(item.id)} />
+          <TouchableHighlight style={tw`bg-green-600 p-4 my-2 `} onPress={() => navigation.navigate('Edit', { data:item })}><Text style={tw`text-white font-semibold`}>Edit</Text></TouchableHighlight>
+          <TouchableHighlight style={tw`bg-red-500 p-4 my-2`} onPress={()=>handleDelete(item.id)}><Text  style={tw`text-white font-semibold`}>Delete</Text></TouchableHighlight>
+   
         </View>
       ))}
       <Button title="Add Journal" onPress={() => navigation.navigate('Create')} />
     </View>
+    </ScrollView>
   );
 };
 

@@ -8,10 +8,11 @@ interface WrapperProps {
 const Wrapper:React.FC<WrapperProps> = ({ children }) =>{
     return (
         <View style={tw`flex-1`}>
-          <ImageBackground source={require('../../assets/book.jpg')} style={tw`flex-1 justify-center px-8 overflow-hidden`}>
-           {children}
+          <ImageBackground source={require('../../assets/book.jpg')} style={tw`flex-1 justify-center px-8`}>
+            {children}
          </ImageBackground>
         </View>
+   
     )
 }
 export default Wrapper;

@@ -1,9 +1,8 @@
 // src/screens/HomeScreen.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 import { NavigationProps } from '../types';
-import { ImageBackground } from 'react-native'
 import Wrapper from '../layouts/Wrapper';
 const HomeScreen:React.FC<NavigationProps> = ({ navigation }) => {
   const handleCreateJournals = () => {
