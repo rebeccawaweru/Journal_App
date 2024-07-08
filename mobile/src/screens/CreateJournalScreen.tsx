@@ -5,7 +5,8 @@ import { NavigationProps } from "../types";
 import tw from 'twrnc'
 import PickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-date-picker';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {jwtDecode} from 'jwt-decode';
 const CreateJournal:React.FC<NavigationProps> = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -13,12 +14,21 @@ const CreateJournal:React.FC<NavigationProps> = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
 
   const handleAddJournal = async () => {
+
     try {
-      const token = 'jwt-token'; // Retrieve JWT token from storage
-      const response = await client.post('/journals', { title, content, category, date }, {
+      const token:any = await AsyncStorage.getItem('jwtToken'); // Retrieve JWT token from storage
+      const decode:any = await jwtDecode(token)
+      const userId = decode.id
+       await client.post('/journals', { title, content, category, date, userId }, {
         headers: { Authorization: `Bearer ${token}` }
-      });
-      navigation.navigate('JournalList');
+      }).then((res)=>{
+        if (res.data.success) {
+           alert('Journal added')
+           navigation.navigate('Journals');
+        }
+      })
+    
+ 
     } catch (error) {
       console.error(error);
     }

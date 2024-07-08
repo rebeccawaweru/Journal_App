@@ -5,20 +5,26 @@ import { NavigationProps } from '../types';
 import tw from 'twrnc'
 import PickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-date-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const EditJournal:React.FC<NavigationProps> = ({ route, navigation }) => {
   const { journal } = route.params;
-  const [title, setTitle] = useState(journal.title);
-  const [content, setContent] = useState(journal.content);
-  const [category, setCategory] = useState(journal.category);
-  const [date, setDate] = useState(new Date(journal.date ));
+  console.log(journal)
+  const [title, setTitle] = useState(journal.title || '');
+  const [content, setContent] = useState(journal.content || '');
+  const [category, setCategory] = useState(journal.category || '');
+  const [date, setDate] = useState(new Date(journal.date ) || new Date());
 
   const handleEditJournal = async () => {
     try {
-      const token = 'jwt-token'; // Retrieve JWT token from storage
+      const token = await AsyncStorage.getItem('jwtToken'); // Retrieve JWT token from storage
       const response = await client.put(`/journals/${journal.id}`, { title, content, category, date }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      navigation.navigate('JournalList');
+      if (response.data.success) {
+        alert('Journal Updated!')
+        navigation.navigate('Journals');
+      }
+   
     } catch (error) {
       console.error(error);
     }

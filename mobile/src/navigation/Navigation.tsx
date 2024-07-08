@@ -7,8 +7,8 @@ const Navigation = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName='Login'>
-                <Stack.Screen name='Login' component={LoginScreen}/>
-                <Stack.Screen name='Register' component={RegisterScreen}/>
+                <Stack.Screen name='Login'  component={LoginScreen}   options={{ title: 'Journal App' }} />
+                <Stack.Screen name='Register' component={RegisterScreen}   options={{ title: 'Get Started' }} />
                 <Stack.Screen name='Home' component={HomeScreen}/>
                 <Stack.Screen name='Create' component={CreateJournal}/>
                 <Stack.Screen name='Edit' component={EditJournal}/>

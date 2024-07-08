@@ -16,7 +16,7 @@ router.post('/', authenticateToken, async (req:Request, res:Response) => {
     }
 });
 
-router.get('/', authenticateToken, async (req:Request, res) => {
+router.get('/', authenticateToken, async (req:Request, res:Response) => {
     const userId = req.user?.id;
     try {
         const journals = await Journal.findAll({where: {userId}});
@@ -26,15 +26,17 @@ router.get('/', authenticateToken, async (req:Request, res) => {
     }
 });
 
-router.put('/:id', authenticateToken, async (req:Request,res) => {
+router.put('/:id', authenticateToken, async (req:Request,res:Response) => {
     const { id } = req.params;
     const { title, content, category, date} = req.body;
     const userId = req.user?.id;
     try {
         const journal = await Journal.findOne({where: {id, userId}});
         if (journal) {
-            journal.update({ title, content, category, date});
-            res.json(journal)
+            journal.update({ title, content, category, date}).then(()=>{
+                res.status(200).json({success:true})
+            })
+      
         } else {
             res.status(404).json({error: 'Journal entry not found'})
         }
@@ -43,11 +45,11 @@ router.put('/:id', authenticateToken, async (req:Request,res) => {
     }
 });
 
-router.delete('/:id', authenticateToken, async(req:Request, res) => {
+router.delete('/:id', authenticateToken, async(req:Request, res:Response) => {
     const { id } = req.params;
     const userId = req.user?.id;
     try {
-      const journal = await Journal.findOne({where: {id, userId}}) ;
+      const journal = await Journal.findOne({where: {id:id, userId:userId}}) ;
       if (journal) {
         journal.destroy();
         res.status(200).json({success:true,message:"Journal entry deleted"});

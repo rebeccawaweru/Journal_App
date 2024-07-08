@@ -3,23 +3,24 @@ import { View, Text, TextInput, Button, TouchableOpacity} from 'react-native';
 import client from '../client/api'
 import tw from 'twrnc'
 import { NavigationProps } from "../types";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const LoginScreen:React.FC<NavigationProps> = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
-        navigation.navigate('Home')
-    //    try {
-  
-    //     const response = await client.post('/auth/login',{username,password});
-   
-    //     // if (response.data.token) {
-    //     //    navigation.navigate('Home')
-    //     // }
-    //    } catch (error) {
-    //        console.log(error)
-    //    }
+       try {
+        const response = await client.post('/auth/login',{
+            username,
+            password
+        });
+        if (response.data.token) {
+            await AsyncStorage.setItem('jwtToken', response.data.token)
+           navigation.navigate('Home')
+        }
+       } catch (error:any) {
+           console.log(error)
+       }
     };
     return (
         <View style={tw`flex-1 justify-center px-8 bg-white`}>

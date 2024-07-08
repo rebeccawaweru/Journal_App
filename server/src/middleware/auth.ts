@@ -9,6 +9,7 @@ export const authenticateToken = (req:Request, res:Response, next:NextFunction) 
         if (typeof verified !== 'string' && verified.id) {
             req.user = verified as JwtPayload & {id: string}
         }
+        next()
     } catch (error) {
         res.status(400).json({error: 'Invalid token'})
     }

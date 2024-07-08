@@ -37,6 +37,10 @@ Journal.init({
     tableName:'journals'
 });
 
+
+
 Journal.belongsTo(User, { foreignKey:'userId', as:'user'});
+
+Journal.sync({ force: false }); 
 
 export default Journal;

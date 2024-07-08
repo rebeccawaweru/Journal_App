@@ -27,4 +27,6 @@ User.init({
     tableName:'users'
 });
 
+User.sync({ force: false }); 
+
 export default User;

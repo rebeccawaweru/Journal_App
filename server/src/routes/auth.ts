@@ -17,13 +17,18 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async(req, res) => {
-     const {username, password} = req.body;
-     const user = await User.findOne({where: { username } })
-     if (!user || !await bcrypt.compare(password,user.password)) {
-        res.status(401).json({error:'Invalid credentials'})
-     }
-     const token = jwt.sign({ id: user?.id}, 'secret', {expiresIn: '1h'});
-     res.json({token})
+   try {
+      const {username, password} = req.body;
+      const user = await User.findOne({where: { username } })
+      if (!user || !await bcrypt.compare(password,user.password)) {
+         res.status(401).json({error:'Invalid credentials'})
+      }
+      const token = jwt.sign({ id: user?.id}, 'secret', {expiresIn: '1h'});
+      res.json({token})
+   } catch (error) {
+      res.json(error)
+   }
+ 
 });
 
 export default router;
