@@ -6,10 +6,7 @@ import tw from 'twrnc'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const ListJournal:React.FC<NavigationProps> = ({ navigation }) => {
   const [journals, setJournals] = useState([])
-// Retrieve JWT token from storage
-
   const handleDelete = async(id:any) => {
-  
       try {
         const token =  await AsyncStorage.getItem('jwtToken'); 
         const response = await client.delete(`/journals/${id}`,{

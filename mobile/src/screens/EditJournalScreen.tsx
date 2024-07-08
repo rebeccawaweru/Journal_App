@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import client from '../client/api'
 import { NavigationProps } from '../types';
 import tw from 'twrnc'
 import PickerSelect from 'react-native-picker-select';
-import DatePicker from 'react-native-date-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DatePicker, BasicInput, BasicButton } from '../components';
+
 const EditJournal:React.FC<NavigationProps> = ({ route, navigation }) => {
   const { journal } = route.params;
-  console.log(journal)
   const [title, setTitle] = useState(journal.title || '');
   const [content, setContent] = useState(journal.content || '');
   const [category, setCategory] = useState(journal.category || '');
   const [date, setDate] = useState(new Date(journal.date ) || new Date());
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
 
+  const handleConfirm = (date:Date) => {
+    setDate( date);
+    hideDatePicker();
+  };
   const handleEditJournal = async () => {
     try {
       const token = await AsyncStorage.getItem('jwtToken'); // Retrieve JWT token from storage
@@ -33,7 +41,7 @@ const EditJournal:React.FC<NavigationProps> = ({ route, navigation }) => {
   return (
     <View style={tw`flex-1 justify-center px-8 bg-white`}>
     <Text style={tw`text-2xl font-bold mb-8 text-center`}>Edit Journal</Text>
-    <TextInput style={tw`border border-gray-300 p-2 mb-4 rounded`} placeholder="Title" value={title} onChangeText={setTitle} />
+    <BasicInput placeholder="Title" value={title} onChangeText={setTitle} />
     <PickerSelect
       style={{
         inputWeb:tw`border border-gray-300 p-2 mb-4 rounded`,
@@ -48,16 +56,14 @@ const EditJournal:React.FC<NavigationProps> = ({ route, navigation }) => {
         { label: 'Fun', value: 'fun' },
       ]}
     />
-<DatePicker
-      style={tw`border border-gray-300 p-2 mb-4 rounded`}
-      date={date}
-      mode="date"
-      confirmText="Confirm"
-      cancelText="Cancel"
-      onDateChange={(selectedDate) => setDate(selectedDate)}
-    />
-    <TextInput multiline textAlignVertical='top' numberOfLines={6} style={tw`border border-gray-300 p-2 mb-4 rounded`}  placeholder="Content" value={content} onChangeText={setContent} />
-    <Button title="Submit" onPress={handleEditJournal} />
+      <TouchableOpacity style={tw`my-2 border border-gray-400 p-2`} onPress={()=>setDatePickerVisibility(true)}><Text>Change Date - {date.toLocaleString()} </Text></TouchableOpacity>
+      <DatePicker
+        isDatePickerVisible={isDatePickerVisible}
+        handleConfirm={handleConfirm}
+        hideDatePicker={hideDatePicker}
+      />
+    <BasicInput multiline textAlignVertical='top' numberOfLines={6}  placeholder="Content" value={content} onChangeText={setContent} />
+    <BasicButton onPress={handleEditJournal} />
   </View>
   );
 };

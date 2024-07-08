@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button} from 'react-native';
+import {Text,TouchableOpacity} from 'react-native';
 import client from '../client/api'
 import { NavigationProps } from "../types";
 import tw from 'twrnc'
 import PickerSelect from 'react-native-picker-select';
-import DatePicker from 'react-native-date-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {jwtDecode} from 'jwt-decode';
+import Wrapper from '../layouts/Wrapper';
+import { DatePicker, BasicInput, BasicButton } from '../components';
 const CreateJournal:React.FC<NavigationProps> = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState(new Date());
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
 
+  const handleConfirm = (date:Date) => {
+    setDate( date);
+    hideDatePicker();
+  };
   const handleAddJournal = async () => {
 
     try {
       const token:any = await AsyncStorage.getItem('jwtToken'); // Retrieve JWT token from storage
-      const decode:any = await jwtDecode(token)
-      const userId = decode.id
-       await client.post('/journals', { title, content, category, date, userId }, {
+       await client.post('/journals', { title, content, category, date }, {
         headers: { Authorization: `Bearer ${token}` }
       }).then((res)=>{
         if (res.data.success) {
@@ -35,14 +41,14 @@ const CreateJournal:React.FC<NavigationProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={tw`flex-1 justify-center px-8 bg-white`}>
+    <Wrapper>
       <Text style={tw`text-2xl font-bold mb-8 text-center`}>Add Journal</Text>
-      <TextInput style={tw`border border-gray-300 p-2 mb-4 rounded`} placeholder="Title" value={title} onChangeText={setTitle} />
+      <BasicInput placeholder="Title" value={title} onChangeText={setTitle} />
       <PickerSelect
         style={{
           inputWeb:tw`border border-gray-300 p-2 mb-4 rounded`,
-          inputIOS: tw`border border-gray-300 p-2 mb-4 rounded`,
-          inputAndroid: tw`border border-gray-300 p-2 mb-4 rounded`,
+          inputIOS: tw`border border-gray-400 p-2 mb-4 rounded`,
+          inputAndroid: tw`border border-gray-400 p-2 mb-4 rounded`,
         }}
         value={category}
         onValueChange={(value) => setCategory(value)}
@@ -52,17 +58,15 @@ const CreateJournal:React.FC<NavigationProps> = ({ navigation }) => {
           { label: 'Fun', value: 'fun' },
         ]}
       />
-  <DatePicker
-        style={tw`border border-gray-300 p-2 mb-4 rounded`}
-        date={date}
-        mode="date"
-        confirmText="Confirm"
-        cancelText="Cancel"
-        onDateChange={(selectedDate) => setDate(selectedDate)}
+      <TouchableOpacity style={tw`my-2 border border-gray-400 p-2`} onPress={()=>setDatePickerVisibility(true)}><Text>Change Date - {date.toLocaleString()} </Text></TouchableOpacity>
+      <DatePicker
+        isDatePickerVisible={isDatePickerVisible}
+        handleConfirm={handleConfirm}
+        hideDatePicker={hideDatePicker}
       />
-      <TextInput multiline textAlignVertical='top' numberOfLines={6} style={tw`border border-gray-300 p-2 mb-4 rounded`}  placeholder="Content" value={content} onChangeText={setContent} />
-      <Button title="Submit" onPress={handleAddJournal} />
-    </View>
+      <BasicInput multiline textAlignVertical='top' rows={6} placeholder="Content" value={content} onChangeText={setContent} />
+      <BasicButton onPress={handleAddJournal} />
+      </Wrapper>
   );
 };
 
