@@ -67,7 +67,7 @@ Alternatively, scan the QR code in the Expo Go app on your physical device.
 
 ## API Documentation<
 ## BASE URL
-http://localhost:5000
+http://localhost:5001
 
 ## Endpoints
 1. User Registration
