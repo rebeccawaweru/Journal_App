@@ -33,7 +33,7 @@ router.get('/', auth_1.authenticateToken, (req, res) => __awaiter(void 0, void 0
     const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
     try {
         const journals = yield journal_1.default.findAll({ where: { userId } });
-        res.json(journals);
+        res.status(200).json(journals);
     }
     catch (error) {
         res.status(400).json(error);

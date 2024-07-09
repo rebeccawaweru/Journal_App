@@ -35,11 +35,11 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (!user || !(yield bcryptjs_1.default.compare(password, user.password))) {
             res.status(401).json({ error: 'Invalid credentials' });
         }
-        const token = jsonwebtoken_1.default.sign({ id: user === null || user === void 0 ? void 0 : user.id }, 'secret', { expiresIn: '1h' });
+        const token = jsonwebtoken_1.default.sign({ id: user === null || user === void 0 ? void 0 : user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     }
     catch (error) {
-        res.json(error);
+        res.status(400).json(error);
     }
 }));
 exports.default = router;

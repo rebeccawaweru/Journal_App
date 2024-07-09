@@ -20,7 +20,7 @@ router.get('/', authenticateToken, async (req:Request, res:Response) => {
     const userId = req.user?.id;
     try {
         const journals = await Journal.findAll({where: {userId}});
-        res.json(journals)
+        res.status(200).json(journals)
     } catch (error) {
         res.status(400).json(error)
     }

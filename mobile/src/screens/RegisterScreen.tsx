@@ -11,6 +11,7 @@ const RegisterScreen:React.FC<NavigationProps> = ({ navigation }) => {
     const handleRegister = async () => {
         try {
             const response = await client.post('/auth/register', {username,password})
+            console.log(response)
             if (response.data.success) {
                 navigation.navigate('Login');
             }
